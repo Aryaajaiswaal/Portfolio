@@ -1,0 +1,40 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+
+interface ContactButtonProps {
+  onClick?: () => void;
+  className?: string;
+  label?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+}
+
+export const ContactButton: React.FC<ContactButtonProps> = ({
+  onClick,
+  className = '',
+  label = 'Contact Me',
+  type = 'button',
+  disabled = false,
+}) => {
+  return (
+    <motion.button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      whileHover={disabled ? undefined : { scale: 1.04 }}
+      whileTap={disabled ? undefined : { scale: 0.96 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className={`rounded-full text-white font-medium uppercase tracking-widest cursor-pointer px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base inline-flex items-center justify-center transition-all disabled:opacity-60 disabled:cursor-not-allowed ${className}`}
+      style={{
+        background: 'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
+        boxShadow: '0px 4px 4px rgba(181, 1, 167, 0.25), inset 4px 4px 12px #7721B1',
+        outline: '2px solid #FFFFFF',
+        outlineOffset: '-3px',
+      }}
+    >
+      <span>{label}</span>
+    </motion.button>
+  );
+};
+
+export default ContactButton;

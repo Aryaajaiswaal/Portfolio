@@ -1,0 +1,8 @@
+{
+  "name": "Aryaa Jaiswal Portfolio",
+  "description": "Portfolio landing page for Aryaa Jaiswal, a CSE (AI) student and aspiring AI/ML engineer exploring artificial intelligence, agentic systems, and software engineering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
