@@ -638,15 +638,18 @@ export const TechCarousel: React.FC = () => {
                   cardsRef.current[idx] = el;
                 }}
                 onClick={() => handleCardClick(idx)}
-                className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[250px] md:w-[260px] h-[205px] sm:h-[215px] md:h-[225px] bg-white rounded-2xl p-4 sm:p-5 border transition-shadow duration-300 flex flex-col justify-between cursor-pointer pointer-events-auto ${
+                className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[250px] md:w-[260px] h-[205px] sm:h-[215px] md:h-[225px] rounded-2xl p-4 sm:p-5 border transition-all duration-300 flex flex-col justify-between cursor-pointer pointer-events-auto ${
                   isCenter
-                    ? 'border-[#0C0C0C]/20 shadow-[0_16px_40px_rgba(0,0,0,0.12)]'
-                    : 'border-[#0C0C0C]/[0.08] shadow-[0_8px_24px_rgba(0,0,0,0.06)]'
+                    ? 'bg-[#111318] border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.4)]'
+                    : 'bg-[#151821] border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.25)]'
                 }`}
                 style={{
                   backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden',
                   willChange: 'transform, opacity',
+                  boxShadow: isCenter
+                    ? `0 24px 50px -10px ${tech.accent}40, 0 0 0 1px ${tech.accent}60`
+                    : undefined,
                 }}
                 role="button"
                 tabIndex={0}
@@ -655,19 +658,21 @@ export const TechCarousel: React.FC = () => {
                 {/* Top Row: Category pill and Logo icon */}
                 <div className="flex items-center justify-between gap-2">
                   <span
-                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase truncate max-w-[155px]"
+                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase truncate max-w-[155px] border"
                     style={{
-                      backgroundColor: `${tech.accent}15`,
+                      backgroundColor: `${tech.accent}20`,
                       color: tech.accent,
+                      borderColor: `${tech.accent}35`,
                     }}
                   >
                     {tech.category}
                   </span>
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border"
                     style={{
-                      backgroundColor: `${tech.accent}12`,
+                      backgroundColor: `${tech.accent}1A`,
                       color: tech.accent,
+                      borderColor: `${tech.accent}33`,
                     }}
                   >
                     <tech.Icon size={18} />
@@ -676,20 +681,20 @@ export const TechCarousel: React.FC = () => {
 
                 {/* Middle Content: Technology Title and Description */}
                 <div className="my-auto py-1">
-                  <h4 className="text-[#0C0C0C] font-black text-lg sm:text-xl tracking-tight leading-tight mb-1 truncate">
+                  <h4 className="text-white font-black text-lg sm:text-xl tracking-tight leading-tight mb-1 truncate">
                     {tech.name}
                   </h4>
-                  <p className="text-xs sm:text-[13px] text-[#0C0C0C]/70 leading-relaxed font-normal line-clamp-3">
+                  <p className="text-xs sm:text-[13px] text-[#D7E2EA]/75 leading-relaxed font-light line-clamp-3">
                     {tech.description}
                   </p>
                 </div>
 
                 {/* Bottom Row: Item sequence index and verified status */}
-                <div className="pt-2 border-t border-[rgba(12,12,12,0.06)] flex items-center justify-between text-[11px] text-[#0C0C0C]/40">
+                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-[#D7E2EA]/50">
                   <span className="font-mono font-medium">#{String(idx + 1).padStart(2, '0')}</span>
                   <span className="flex items-center gap-1.5 font-medium" style={{ color: tech.accent }}>
                     <span
-                      className="w-1.5 h-1.5 rounded-full"
+                      className="w-1.5 h-1.5 rounded-full animate-pulse"
                       style={{ backgroundColor: tech.accent }}
                     />
                     <span>Active Skill</span>

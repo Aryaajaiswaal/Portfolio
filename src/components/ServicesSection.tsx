@@ -110,6 +110,181 @@ const experiences: ExperienceItem[] = [
   },
 ];
 
+interface ExperienceCardProps {
+  item: ExperienceItem;
+  index: number;
+}
+
+const ExperienceCard: React.FC<ExperienceCardProps> = ({ item, index }) => {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = React.useState(false);
+  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <FadeIn delay={index * 0.12} y={30}>
+      <motion.div
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        whileHover={{ y: -8, scale: 1.008 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+        className="bg-white rounded-3xl p-6 sm:p-8 md:p-10 border transition-all duration-300 relative overflow-hidden group cursor-default"
+        style={
+          {
+            borderColor: isHovered ? `${item.accent}45` : 'rgba(12, 12, 12, 0.09)',
+            boxShadow: isHovered
+              ? `0 28px 60px -15px ${item.accent}25, 0 10px 24px -5px rgba(0,0,0,0.04)`
+              : '0 4px 24px rgba(0,0,0,0.03)',
+            '--accent': item.accent,
+          } as React.CSSProperties
+        }
+      >
+        {/* Dynamic Cursor Spotlight Overlay */}
+        <div
+          className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-0"
+          style={{
+            background: `radial-gradient(650px circle at ${mousePosition.x}px ${mousePosition.y}px, ${item.accent}14, transparent 70%)`,
+          }}
+        />
+
+        {/* Left Glowing Accent Stripe */}
+        <div
+          className="absolute left-0 top-0 bottom-0 transition-all duration-300 z-10"
+          style={{
+            width: isHovered ? '8px' : '5px',
+            background: `linear-gradient(180deg, ${item.accent}, ${item.accent}80)`,
+            boxShadow: isHovered ? `0 0 18px ${item.accent}90` : 'none',
+          }}
+        />
+
+        {/* Card Content Container */}
+        <div className="relative z-10">
+          {/* Header Row: Role, Company, Period & Radar Badge */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-[rgba(12,12,12,0.08)]">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all duration-300"
+                  style={{
+                    backgroundColor: `${item.accent}14`,
+                    color: item.accent,
+                    borderColor: `${item.accent}30`,
+                  }}
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span
+                      className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                      style={{ backgroundColor: item.accent }}
+                    />
+                    <span
+                      className="relative inline-flex rounded-full h-2 w-2"
+                      style={{ backgroundColor: item.accent }}
+                    />
+                  </span>
+                  {item.badge}
+                </span>
+              </div>
+              <h4
+                className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight transition-colors duration-300"
+                style={{
+                  color: isHovered ? item.accent : '#0C0C0C',
+                }}
+              >
+                {item.role}
+              </h4>
+              <div className="text-sm sm:text-base font-bold text-[#0C0C0C]/80 uppercase tracking-wide mt-1">
+                {item.company}
+              </div>
+              <div className="text-xs text-[#0C0C0C]/50 font-medium font-mono mt-0.5">
+                {item.focus}
+              </div>
+            </div>
+
+            <div className="shrink-0 flex items-center gap-3">
+              <span
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all duration-300 border"
+                style={{
+                  backgroundColor: isHovered ? `${item.accent}10` : 'rgba(12, 12, 12, 0.04)',
+                  color: isHovered ? item.accent : 'rgba(12, 12, 12, 0.75)',
+                  borderColor: isHovered ? `${item.accent}30` : 'rgba(12, 12, 12, 0.08)',
+                }}
+              >
+                <Calendar size={13} className="shrink-0" />
+                {item.period}
+              </span>
+            </div>
+          </div>
+
+          {/* Narrative Description */}
+          <div className="py-5">
+            <p className="font-light leading-relaxed text-[#0C0C0C]/85 text-sm sm:text-base">
+              {item.description}
+            </p>
+          </div>
+
+          {/* Key Highlights Grid with Staggered Micro-Hovers */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pb-5">
+            {item.highlights.map((highlight, hIdx) => (
+              <motion.div
+                key={hIdx}
+                whileHover={{ x: 5, scale: 1.01 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0C0C0C]/85 p-3 sm:p-3.5 rounded-xl border transition-all duration-200 cursor-default"
+                style={{
+                  backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.95)' : 'rgba(12, 12, 12, 0.025)',
+                  borderColor: isHovered ? `${item.accent}25` : 'rgba(12, 12, 12, 0.06)',
+                  boxShadow: isHovered ? '0 4px 12px rgba(0,0,0,0.03)' : 'none',
+                }}
+              >
+                <motion.div whileHover={{ scale: 1.25, rotate: 10 }}>
+                  <CheckCircle2
+                    size={16}
+                    style={{ color: item.accent }}
+                    className="shrink-0 mt-0.5"
+                  />
+                </motion.div>
+                <span className="leading-snug">{highlight}</span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Bottom Skill Tags with Interactive Spring Bounces */}
+          <div className="pt-4 border-t border-[rgba(12,12,12,0.06)] flex flex-wrap items-center gap-2">
+            <span className="text-xs font-mono font-medium text-[#0C0C0C]/40 uppercase tracking-wider mr-1">
+              Key Stack:
+            </span>
+            {item.skills.map((skill) => (
+              <motion.span
+                key={skill}
+                whileHover={{ y: -3, scale: 1.06 }}
+                transition={{ type: 'spring', stiffness: 450, damping: 20 }}
+                className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium border transition-colors cursor-default"
+                style={{
+                  backgroundColor: isHovered ? `${item.accent}14` : 'rgba(12, 12, 12, 0.04)',
+                  color: isHovered ? item.accent : 'rgba(12, 12, 12, 0.75)',
+                  borderColor: isHovered ? `${item.accent}35` : 'rgba(12, 12, 12, 0.08)',
+                }}
+              >
+                {skill}
+              </motion.span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </FadeIn>
+  );
+};
+
 export const ServicesSection: React.FC = () => {
   const [hoveredService, setHoveredService] = useState<number | null>(null);
 
@@ -266,95 +441,7 @@ export const ServicesSection: React.FC = () => {
           {/* Experience Cards Grid */}
           <div className="space-y-8 sm:space-y-10">
             {experiences.map((item, index) => (
-              <FadeIn key={item.company} delay={index * 0.12} y={30}>
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                  className="bg-white rounded-3xl p-6 sm:p-8 md:p-10 border border-[rgba(12,12,12,0.1)] hover:border-[#0C0C0C]/25 shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.09)] transition-all duration-300 relative overflow-hidden group"
-                >
-                  {/* Left Accent Border Stripe */}
-                  <div
-                    className="absolute left-0 top-0 bottom-0 w-1.5 transition-all duration-300 opacity-60 group-hover:opacity-100 group-hover:w-2.5"
-                    style={{ backgroundColor: item.accent }}
-                  />
-
-                  {/* Header Row: Role, Company, Period & Badge */}
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-[rgba(12,12,12,0.08)]">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide"
-                          style={{
-                            backgroundColor: `${item.accent}14`,
-                            color: item.accent,
-                          }}
-                        >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full animate-pulse"
-                            style={{ backgroundColor: item.accent }}
-                          />
-                          {item.badge}
-                        </span>
-                      </div>
-                      <h4 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-[#0C0C0C] group-hover:text-[var(--accent)] transition-colors">
-                        {item.role}
-                      </h4>
-                      <div className="text-sm sm:text-base font-bold text-[#0C0C0C]/75 uppercase tracking-wide mt-1">
-                        {item.company}
-                      </div>
-                      <div className="text-xs text-[#0C0C0C]/50 font-medium font-mono mt-0.5">
-                        {item.focus}
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 flex items-center gap-3">
-                      <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono font-semibold bg-[#0C0C0C]/5 text-[#0C0C0C]/75 border border-[#0C0C0C]/10 shadow-xs">
-                        <Calendar size={13} className="text-[#0C0C0C]/50" />
-                        {item.period}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Narrative Description */}
-                  <div className="py-5">
-                    <p className="font-light leading-relaxed text-[#0C0C0C]/85 text-sm sm:text-base">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Key Highlights Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pb-5">
-                    {item.highlights.map((highlight, hIdx) => (
-                      <div
-                        key={hIdx}
-                        className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0C0C0C]/85 bg-[#0C0C0C]/[0.025] group-hover:bg-[#0C0C0C]/[0.04] p-3 rounded-xl border border-[rgba(12,12,12,0.06)] transition-colors"
-                      >
-                        <CheckCircle2
-                          size={16}
-                          style={{ color: item.accent }}
-                          className="shrink-0 mt-0.5"
-                        />
-                        <span className="leading-snug">{highlight}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bottom Skill Tags */}
-                  <div className="pt-4 border-t border-[rgba(12,12,12,0.06)] flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-mono font-medium text-[#0C0C0C]/40 uppercase tracking-wider mr-1">
-                      Key Stack:
-                    </span>
-                    {item.skills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-[#0C0C0C]/5 text-[#0C0C0C]/75 border border-[#0C0C0C]/10 hover:bg-[#0C0C0C] hover:text-white transition-all cursor-default"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              </FadeIn>
+              <ExperienceCard key={item.company} item={item} index={index} />
             ))}
           </div>
         </div>
